@@ -1,0 +1,22 @@
+with-expecter: True
+keeptree: False
+inpackage-suffix: False
+outpkg: "mocks"
+dir: "./mocks"
+case: underscore
+
+packages:
+  gitlab.com/jc88/api-example/usecase:
+    config:
+      outpkg: controller_test
+      dir: ./infra/controller
+      filename: "mock_{{.InterfaceName}}_test.go"
+    interfaces:
+      ConfigurationApplier:
+  gitlab.com/jc88/api-example/domain:
+    config:
+      outpkg: usecase_test
+      dir: ./usecase
+      filename: "mock_{{.InterfaceName}}_test.go"
+    interfaces:
+      RetailerInstructionsManager:

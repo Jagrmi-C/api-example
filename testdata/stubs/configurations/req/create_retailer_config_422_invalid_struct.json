@@ -1,0 +1,33 @@
+{
+    "data": {
+        "attributes": {
+            "country": "ES",
+            "deliveryType": "direct",
+            "instructions": [
+                {
+                    "attempts": 0,
+                    "priority": 0,
+                    "steps": [
+                        {
+                            "name": "SCAN"
+                        }
+                    ],
+                    "type": "PICKUP_WH"
+                },
+                {
+                    "attempts": 0,
+                    "priority": 0,
+                    "steps": [
+                        {
+                            "name": "SCAN"
+                        }
+                    ],
+                    "type": "FAILED_PICKUP_WH"
+                }
+            ],
+            "operationalModel": "warehouse_model",
+            "serviceType": "ST2"
+        },
+        "type": "configurations"
+    }
+}

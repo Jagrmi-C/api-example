@@ -1,0 +1,46 @@
+{
+    "data": [
+        {
+            "attributes": {
+                "country": "ES",
+                "deliveryType": "DIRECT",
+                "instructions": [
+                    {
+                        "attempts": 0,
+                        "priority": 0,
+                        "steps": [
+                            {
+                                "name": "SCAN"
+                            }
+                        ],
+                        "type": "DELIVERY_HOUSEHOLD"
+                    }
+                ],
+                "operationalModel": "WAREHOUSE",
+                "serviceType": "ST2"
+            },
+            "type": "configurations"
+        },
+        {
+            "attributes": {
+                "country": "ES",
+                "deliveryType": "DIRECT",
+                "instructions": [
+                    {
+                        "attempts": 0,
+                        "priority": 0,
+                        "steps": [
+                            {
+                                "name": "SCAN"
+                            }
+                        ],
+                        "type": "DELIVERY_3RD_PARTY"
+                    }
+                ],
+                "operationalModel": "WAREHOUSE",
+                "serviceType": "ST2"
+            },
+            "type": "configurations"
+        }
+    ]
+}

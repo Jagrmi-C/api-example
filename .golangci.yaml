@@ -1,0 +1,402 @@
+run:
+  build-tags:
+    - infra
+  # timeout for analysis, e.g. 30s, 5m, default is 1m
+  timeout: 5m
+
+  # Allow multiple parallel golangci-lint instances running.
+  # If false, golangci-lint acquires file lock on start.
+  # Default: false
+  allow-parallel-runners: true
+
+  # which dirs to skip: they won't be analyzed;
+  # can use regexp here: generated.*, regexp is applied on full path;
+  # default value is empty list, but next dirs are always skipped independently
+  # from this option's value:
+  #   	vendor$, third_party$, testdata$, examples$, Godeps$, builtin$
+  skip-dirs:
+    - proto
+    - mocks
+    - mock
+
+  skip-files:
+    - ".*\\.pb\\.go"
+    - ".*\\.generated\\.go"
+    - ".*/mock_*.go"
+    - ".*/docs.go"
+
+output:
+  # Format: colored-line-number|line-number|json|colored-tab|tab|checkstyle|code-climate|junit-xml|github-actions|teamcity
+  #
+  # Multiple can be specified by separating them by comma, output can be provided
+  # for each of them by separating format name and path by colon symbol.
+  # Output path can be either `stdout`, `stderr` or path to the file to write to.
+  # Example: "checkstyle:report.xml,json:stdout,colored-line-number"
+  #
+
+  # Print lines of code with issue.
+  # Default: true
+  print-issued-lines: false
+  # Print linter name in the end of issue text.
+  # Default: true
+  print-linter-name: false
+  # Make issues output unique by line.
+  # Default: true
+  uniq-by-line: false
+  # Add a prefix to the output file references.
+  # Default: ""
+  path-prefix: ""
+  # Sort results by: filepath, line and column.
+  # Default: false
+  sort-results: true
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gofumpt
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - unconvert
+    - staticcheck # is a go vet on steroids, applying a ton of static analysis checks
+    - gocognit # computes and checks the cognitive complexity of functions
+    - goconst # finds repeated strings that could be replaced by a constant
+    - gocritic # provides diagnostics that check for bugs, performance and style issues
+    - gocyclo # computes and checks the cyclomatic complexity of functions
+    - godot # checks if comments end in a period
+    - goimports # in addition to fixing imports, goimports also formats your code in the same style as gofmt
+    - makezero # finds slice declarations with non-zero initial length
+    - mirror # reports wrong mirror patterns of bytes/strings usage
+    - prealloc
+    - predeclared
+    - testpackage
+    - thelper
+    - tparallel
+    - typecheck # like the front-end of a Go compiler, parses and type-checks Go code
+    - unparam # reports unused function parameters
+    # - unused # checks for unused constants, variables, functions and types
+    - varnamelen
+    - wastedassign # finds wasted assignment statements
+    - whitespace # detects leading and trailing whitespace
+
+linters-settings:
+  errcheck:
+    # report about not checking of errors in type assetions: `a := b.(MyStruct)`;
+    # default is false: such cases aren't reported by default.
+    check-type-assertions: true
+
+    # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
+    # default is false: such cases aren't reported by default.
+    check-blank: false
+  goconst:
+    # Minimal length of string constant.
+    # Default: 3
+    min-len: 3
+    # Minimum occurrences of constant string count to trigger issue.
+    # Default: 3
+    min-occurrences: 2
+    # Ignore test files.
+    # Default: false
+    ignore-tests: true
+    # Look for existing constants matching the values.
+    # Default: true
+    match-constant: false
+    # Search also for duplicated numbers.
+    # Default: false
+    numbers: true
+    # Minimum value, only works with goconst.numbers
+    # Default: 3
+    min: 2
+    # Maximum value, only works with goconst.numbers
+    # Default: 3
+    max: 2
+    # Ignore when constant is not used as function argument.
+    # Default: true
+    ignore-calls: false
+    # Exclude strings matching the given regular expression.
+    # Default: ""
+    ignore-strings: 'foo.+'
+  gocritic:
+    # https://go-critic.com/overview#checks-overview
+    # enabled-tags:
+    #   - diagnostic
+    #   - style
+    #   - performance
+    #   - experimental
+    #   - opinionated
+    enabled-checks:
+      # Checkers from the “diagnostic” group
+      - appendAssign
+      - argOrder
+      - badCond
+      - badLock
+      - badRegexp
+      - badSorting
+      - caseOrder
+      - codegenComment
+      - deprecatedComment
+      - dupArg
+      - dupBranchBody
+      - dupCase
+      - dupSubExpr
+      - flagDeref
+      - flagName
+      - mapKey
+      - nilValReturn
+      - offBy1
+      - sloppyLen
+      - sloppyReassign
+      - sloppyTypeAssert
+      - sortSlice
+      - sprintfQuotedString
+      - sqlQuery
+      - syncMapLoadAndDelete
+      - truncateCmp
+      - uncheckedInlineErr
+      - unnecessaryDefer
+      - weakCond
+      # Checkers from the “style” group
+      - boolExprSimplify
+      - builtinShadow
+      - captLocal
+      - commentedOutImport
+      - commentFormatting
+      - defaultCaseOrder
+      - docStub
+      - dupImport
+      - elseif
+      - emptyFallthrough
+      - ifElseChain
+      - importShadow
+      - initClause
+      - nestingReduce
+      - newDeref
+      - regexpMust
+      - regexpSimplify
+      - singleCaseSwitch
+      - switchTrue
+      - timeExprSimplify
+      - typeSwitchVar
+      - typeUnparen
+      - underef
+      - unlambda
+      - unslice
+      - valSwap
+      - wrapperFunc
+      # Checkers from the “performance” grou
+      - appendCombine
+      - equalFold
+      - hugeParam
+      - indexAlloc
+      - preferDecodeRune
+      - preferFprint
+      - preferStringWriter
+      - preferWriteByte
+      - rangeExprCopy
+      - rangeValCopy
+      - sliceClear
+      - stringXbytes
+    # Settings passed to gocritic.
+    # The settings key is the name of a supported gocritic checker.
+    # The list of supported checkers can be find in https://go-critic.github.io/overview.
+    settings:
+      # Must be valid enabled check name.
+      captLocal:
+        # Whether to restrict checker to params only.
+        # Default: true
+        paramsOnly: false
+      hugeParam:
+        # Size in bytes that makes the warning trigger.
+        # Default: 80
+        sizeThreshold: 70
+      rangeExprCopy:
+        # Size in bytes that makes the warning trigger.
+        # Default: 512
+        sizeThreshold: 516
+        # Whether to check test functions
+        # Default: true
+        skipTestFuncs: false
+  gofmt:
+    # simplify code: gofmt with `-s` option, true by default
+    simplify: true
+  gomnd:
+    # List of enabled checks, see https://github.com/tommy-muehle/go-mnd/#checks for description.
+    # Default: ["argument", "case", "condition", "operation", "return", "assign"]
+    checks:
+      - argument
+      - case
+      - condition
+      - operation
+      - return
+      - assign
+    # List of numbers to exclude from analysis.
+    # The numbers should be written as string.
+    # Values always ignored: "1", "1.0", "0" and "0.0"
+    # Default: []
+    ignored-numbers:
+      - '0666'
+    # List of file patterns to exclude from analysis.
+    # Values always ignored: `.+_test.go`
+    # Default: []
+    ignored-files:
+      - 'magic1_.+\.go$'
+    # List of function patterns to exclude from analysis.
+    # Following functions are always ignored: `time.Date`,
+    # `strconv.FormatInt`, `strconv.FormatUint`, `strconv.FormatFloat`,
+    # `strconv.ParseInt`, `strconv.ParseUint`, `strconv.ParseFloat`.
+    # Default: []
+    ignored-functions:
+      - '^math\.'
+      - '^http\.StatusText$'
+  gosec:
+    # Filter out the issues with a lower severity than the given value.
+    # Valid options are: low, medium, high.
+    # Default: low
+    severity: medium
+    # Filter out the issues with a lower confidence than the given value.
+    # Valid options are: low, medium, high.
+    # Default: low
+    confidence: medium
+  govet:
+    # Report about shadowed variables.
+    # Default: false
+    check-shadowing: true
+  lll:
+    # Max line length, lines longer will be reported.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option.
+    # Default: 120.
+    line-length: 160
+    # Tab width in spaces.
+    # Default: 1
+    tab-width: 1
+  misspell:
+    # Correct spellings using locale preferences for US or UK.
+    # Default is to use a neutral variety of English.
+    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+    locale: US
+    ignore-words:
+      - cancelled
+  testifylint:
+    # Enable all checkers (https://github.com/Antonboom/testifylint#checkers).
+    # Default: false
+    enable-all: true
+    # Disable checkers by name
+    # (in addition to default
+    #   suite-thelper
+    # ).
+    disable:
+      - nil-compare
+      - require-error
+      - suite-dont-use-pkg
+  unparam:
+    # Inspect exported functions.
+    #
+    # Set to true if no external program/library imports your code.
+    # XXX: if you enable this setting, unparam will report a lot of false-positives in text editors:
+    # if it's called for subdir of a project it can't find external interfaces. All text editor integrations
+    # with golangci-lint call it on a directory with the changed file.
+    #
+    # Default: false
+    check-exported: true
+  unused:
+    # Mark all struct fields that have been written to as used.
+    # Default: true
+    field-writes-are-uses: false
+    # Treat IncDec statement (e.g. `i++` or `i--`) as both read and write operation instead of just write.
+    # Default: false
+    post-statements-are-reads: true
+    # Mark all exported identifiers as used.
+    # Default: true
+    exported-is-used: false
+    # Mark all exported fields as used.
+    # default: true
+    exported-fields-are-used: false
+    # Mark all function parameters as used.
+    # default: true
+    parameters-are-used: false
+    # Mark all local variables as used.
+    # default: true
+    local-variables-are-used: false
+    # Mark all identifiers inside generated files as used.
+    # Default: true
+    generated-is-used: false
+  varnamelen:
+    # The longest distance, in source lines, that is being considered a "small scope".
+    # Variables used in at most this many lines will be ignored.
+    # Default: 5
+    max-distance: 6
+    # The minimum length of a variable's name that is considered "long".
+    # Variable names that are at least this long will be ignored.
+    # Default: 3
+    min-name-length: 2
+    # Check method receivers.
+    # Default: false
+    check-receiver: false
+    # Check named return values.
+    # Default: false
+    check-return: true
+    # Check type parameters.
+    # Default: false
+    check-type-param: true
+    # Ignore "ok" variables that hold the bool return value of a type assertion.
+    # Default: false
+    ignore-type-assert-ok: true
+    # Ignore "ok" variables that hold the bool return value of a map index.
+    # Default: false
+    ignore-map-index-ok: true
+    # Ignore "ok" variables that hold the bool return value of a channel receive.
+    # Default: false
+    ignore-chan-recv-ok: true
+    # Optional list of variable names that should be ignored completely.
+    # Default: []
+    ignore-names:
+      - err
+    # Optional list of variable declarations that should be ignored completely.
+    # Entries must be in one of the following forms (see below for examples):
+    # - for variables, parameters, named return values, method receivers, or type parameters:
+    #   <name> <type>  (<type> can also be a pointer/slice/map/chan/...)
+    # - for constants: const <name>
+    #
+    # Default: []
+    ignore-decls:
+      - c echo.Context
+      - t testing.T
+      - f *foo.Bar
+      - e error
+      - i int
+      - const C
+      - T any
+      - m map[string]int
+      - w http.ResponseWriter
+      - r *http.Request
+      - l logger.Logger
+
+issues:
+  # List of regexps of issue texts to exclude, empty list by default.
+  # But independently from this option we use default exclude patterns,
+  # it can be disabled by `exclude-use-default: false`. To list all
+  # excluded by default patterns execute `golangci-lint run --help`
+  exclude:
+    - composite literal uses unkeyed fields
+
+  exclude-rules:
+    - source: "(noinspection|TODO)"
+      linters: [ godot ]
+    - source: "//noinspection"
+      linters: [ gocritic ]
+    - path: _test\.go$|^tests/|^samples/|fixtures\.go$
+      linters:
+        - errcheck
+        - maligned
+        - govet
+        - lll
+    - path: _mock\.go$|_event\.go$|^config/|infra/events\.go$
+      linters:
+        - govet
+
+  # Maximum count of issues with the same text.
+  # Set to 0 to disable.
+  # Default: 3
+  max-same-issues: 50
